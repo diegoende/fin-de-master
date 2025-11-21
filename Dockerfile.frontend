@@ -1,0 +1,21 @@
+FROM node:20
+
+WORKDIR /app
+
+COPY frontend/ ./frontend
+WORKDIR /app/frontend
+
+# Instala recharts junto con el resto de dependencias
+RUN npm install
+
+# Construye el frontend
+RUN npm run build
+
+# Instala el servidor estático para servir la app
+RUN npm install -g serve
+
+# Expone el puerto en el que vamos a servir (vite build + serve usa 3000 por convención)
+EXPOSE 3000
+
+# Sirve la carpeta 'dist' (que es lo que genera Vite, no 'build')
+CMD ["serve", "-s", "dist", "-l", "3000"]
